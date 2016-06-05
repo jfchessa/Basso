@@ -27,7 +27,7 @@ LIB_DIR = $(BLAS_LAPACK_DIR)
 LIBS = $(BLAS_LAPACK_LIB)
  
 all:
-	make test1 test2 test3
+	make test1 test2 test3 test4 test5 
 	
 test1: test1.cpp
 	$(CPPC) $(INC_DIR) $(CPPFLAGS) -o test1 test1.cpp $(LIB_DIR) $(LIBS)
@@ -40,6 +40,9 @@ test3: test3.cpp
 	
 test4: test4.cpp
 	$(CPPC) $(INC_DIR) $(CPPFLAGS) -o test4 test4.cpp $(LIB_DIR) $(LIBS)
+	
+test5: test5.cpp
+	$(CPPC) $(INC_DIR) $(CPPFLAGS) -o test5 test5.cpp $(LIB_DIR) $(LIBS)
 		
 clean:
-	rm -f test1 test2 test3 test4
+	rm -f test1 test2 test3 test4 test5 
