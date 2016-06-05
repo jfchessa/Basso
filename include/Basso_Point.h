@@ -87,7 +87,7 @@ public:
 	
     ~Basso_Point() { if (localmem_) delete xyz_; }
     
-    /** conversion operator **/
+    /** conversion operator; this allows for the point to convert to a Basso_Numeric pointer **/
     operator const Basso_Numeric *() { return xyz_; }
 	
 	/** returns true if the memory allocation is local else false is returned */
