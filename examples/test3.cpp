@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 {
 	cout << "Test of the Element classes in Basso\n";
 	
-	Basso_QuadratureGauss1D qrule(3);
+	Basso_QuadratureRule qrule(Basso_GAUSS1D_QUAD,3);
 	
 	Basso_QuadratureRule::ConstIterator qitr;
 	for ( qitr=qrule.Begin(); qitr!=qrule.End(); ++qitr )
