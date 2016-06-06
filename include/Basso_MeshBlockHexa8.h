@@ -22,7 +22,6 @@ public:
     enum VertexID { kVertex0, kVertex1, kVertex2, kVertex3, kVertex4, kVertex5, kVertex6, kVertex7 };
     
 	/** Define a block in 3D by its verticies */
-	
 	Basso_MeshBlockHexa8( );
 		
 	Basso_MeshBlockHexa8( const T *x1, const T *x2, const T *x3, const T *x4,
@@ -72,12 +71,19 @@ protected:
 	int order;
 };
 
-
 template<class T>
-void Basso_MeshBlockHexa8<T>::SetElementSize( T he ) 
-{ 
-	std::cout << "Basso_MeshBlockHexa8<T>::SetElementSize( T he ) not yet impleementd";
+void Basso_MeshBlockHexa8<T>::SetElementSize( T he )
+{
+	Basso_Numeric l1, l2, l3;
+	l1 = abs( 0.25*(v1[0]+v5[0]+v8[0]+v4[0]) - 0.25*(v2[0]+v3[0]+v6[0]+v7[0]) );
+	l2 = abs( 0.25*(v1[1]+v5[1]+v2[1]+v6[1]) - 0.25*(v3[1]+v4[1]+v7[1]+v8[1]) );
+	l3 = abs( 0.25*(v1[2]+v2[2]+v3[2]+v4[2]) - 0.25*(v5[2]+v6[2]+v7[2]+v8[2]) );
+	
+	nn1 = ceil(l1/he);
+	nn2 = ceil(l2/he);
+	nn3 = ceil(l3/he);
 }
+
  
 template<class T>
 void Basso_MeshBlockHexa8<T>::SetCorners( const T *x1, const T *x2, const T *x3, const T *x4,

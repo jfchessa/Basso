@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	
 	Basso_Point p0( 0.0, 0.0, 0.0 ), p1( 10.0, 5.0, 3.0 );
 	mesh.SetCorners(p0,p1);
-	mesh.SetNumNodes(21,11,7);
+	mesh.SetElementSize(0.05);
 	
 	int nn = mesh.NumNodes(), ne=mesh.NumElements();
 	Basso_nMatrix nodes(3,nn);
