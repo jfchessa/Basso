@@ -1,6 +1,6 @@
 /*! \file Basso_feaop.h
-
-Some finite element operations
+@file
+@brief Some basic finite element operations
 
 \author Jack Chessa, jfchessa@utep.edu
 \date Sunday, Oct 30, 2011
@@ -23,7 +23,7 @@ using namespace std;
 
 
 //  ************* ALL MATRICIES ARE ASSUMED STORED IN FORTRAN COLUMN FORMAT *************  //
-/** 
+/*! 
 	The gradient matrices are returned in the following format
 	dNa = [ dN1dxi dN2dxi dN3dxi ... dNndxi dN1deta dN2deta dN3deta ... dNndeta ..... ]
 	
@@ -74,7 +74,9 @@ Nv = [ Ni 0 0;
 	}
 	
 */	
-/** 
+
+template < class NuMeRiC >
+/*!
 	Forms the B matrix from a shape function gradient matrix
 	
 	      | Ni,x  0   0  |
@@ -89,7 +91,6 @@ Nv = [ Ni 0 0;
 	\param nn (optional) number of nodes (default is num rows in DNa_x)
 	\param sdim (optional) spacial dimension (default is num cols in DNa_x)
 **/
-template < class NuMeRiC >
 void form_bmatrix( int nn, int sdim, const NuMeRiC *DNa_x, int lda, NuMeRiC *B, int ldb )
 {
 
@@ -271,6 +272,7 @@ Computes the Jacobian (determinant) and Jacobian matrix for an element
 	\param edim element dimension, optional (default is number of columns in dN_xi)
 	\param coordRowFormat (default is false) if set to true then the coordinate 
 	        matrix, cmat is in row format (the nodes are in a row)
+	\return the det(J)
 
 Note, that the use of the optional parameters allows for the use of matrices that are of 
 incompatible dimension as long as nn, sdim and edim are defined.  This is done so that 

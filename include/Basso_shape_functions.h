@@ -54,7 +54,7 @@ using namespace std;
 		\param inc increment in the Na vector where the shape function values will be places (default=1)
 		\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[-1,1]
 		
-		\image html line2.pdf
+		\image html line2.jpg
 		
 */
 template < class NuMeRiC >
@@ -72,7 +72,7 @@ coordinate system
 	\param dNa the array where the shape function gradient values are returned
 	\param lda the leading dimension of dNa
 	\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[-1,1]
-		\image html line2.pdf
+		\image html line2.jpg
 */
 template < class NuMeRiC >
 int dshape_line2( NuMeRiC *dNa, int lda, const NuMeRiC &xi=0.0 )
@@ -89,7 +89,7 @@ int dshape_line2( NuMeRiC *dNa, int lda, const NuMeRiC &xi=0.0 )
 		\param inc increment in the Na vector where the shape function values will be places (default=1)
 		\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[-1,1]
 
-		\image html line3.pdf		
+		\image html line3.jpg		
 */
 template < class NuMeRiC >
 int shape_line3( NuMeRiC *Na, int inc=1, const NuMeRiC &xi=0.0 )
@@ -108,7 +108,7 @@ coordinate system
 	\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[-1,1]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 	
-		\image html line3.pdf
+		\image html line3.jpg
 
 */
 template < class NuMeRiC >
@@ -127,7 +127,7 @@ int dshape_line3( NuMeRiC *dNa, int lda, const NuMeRiC &xi=0.0   )
 		\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[0,1]
 		\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[0,1-xi]
 
-		\image html tria3.pdf
+		\image html tria3.jpg
 		
 */
 template < class NuMeRiC >
@@ -149,7 +149,7 @@ coordinate system
 	\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[0,1-xi]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-		\image html tria3.pdf
+		\image html tria3.jpg
 */
 template < class NuMeRiC >
 int dshape_tria3( NuMeRiC *dNa, int lda, const NuMeRiC &xi=ONETHIRD, const NuMeRiC &eta=ONETHIRD )
@@ -166,7 +166,7 @@ int dshape_tria3( NuMeRiC *dNa, int lda, const NuMeRiC &xi=ONETHIRD, const NuMeR
 			dNa = [ dN1dx dN2dx dN3dx dN1dy dN2dy dN3dy ]
 		
 		The return value is the area of the triangle	
-			\image html tria3.pdf
+			\image html tria3.jpg
 */
 template< class NuMeRiC >
 NuMeRiC gradshape_tria3( NuMeRiC *dNa, int lda, NuMeRiC *x1, NuMeRiC *x2, NuMeRiC *x3, int sdim=2 )
@@ -201,7 +201,7 @@ NuMeRiC gradshape_tria3( NuMeRiC *dNa, int lda, NuMeRiC *x1, NuMeRiC *x2, NuMeRi
 		\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[0,1]
 		\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[0,1-xi]
 
-		\image html tria4.pdf
+		\image html tria4.jpg
 
 */
 template < class NuMeRiC >
@@ -223,7 +223,7 @@ w.r.t to the parent coordinate system
 	\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[0,1-xi]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-		\image html tria4.pdf
+		\image html tria4.jpg
 
 */
 template < class NuMeRiC >
@@ -243,7 +243,7 @@ int dshape_tria4( NuMeRiC *dNa, int lda, const NuMeRiC &xi=ONETHIRD, const NuMeR
 		\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[0,1]
 		\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[0,1-xi]
 
-		\image html tria6.pdf
+		\image html tria6.jpg
 	
 */
 template < class NuMeRiC >
@@ -267,7 +267,7 @@ w.r.t to the parent coordinate system
 	\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[0,1-xi]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-		\image html tria6.pdf
+		\image html tria6.jpg
 */
 template < class NuMeRiC >
 int dshape_tria6( NuMeRiC *dNa, int lda, const NuMeRiC &xi=ONETHIRD, const NuMeRiC &eta=ONETHIRD  )
@@ -289,7 +289,7 @@ int dshape_tria6( NuMeRiC *dNa, int lda, const NuMeRiC &xi=ONETHIRD, const NuMeR
 		\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[-1,1]
 
 
-		\image html quad4.pdf	
+		\image html quad4.jpg	
 */
 template < class NuMeRiC >
 int shape_quad4( NuMeRiC *Na, int inc=1, const NuMeRiC &xi=0.0, const NuMeRiC &eta=0.0 )
@@ -310,7 +310,7 @@ int shape_quad4( NuMeRiC *Na, int inc=1, const NuMeRiC &xi=0.0, const NuMeRiC &e
 		\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[-1,1]
 		\param edim (optional) on returns contains the dimension of the element in the parament space
 
-	\image html quad4.pdf
+	\image html quad4.jpg
 		
 */
 template < class NuMeRiC >
@@ -330,7 +330,7 @@ int dshape_quad4( NuMeRiC *dNa, int lda, const NuMeRiC &xi=0.0, const NuMeRiC &e
 			\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[-1,1]
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[-1,1]
 
-		\image html quad8.pdf	
+		\image html quad8.jpg	
 */
 template < class NuMeRiC >
 int shape_quad8( NuMeRiC *Na, int inc=1, const NuMeRiC &xi=0.0, const NuMeRiC &eta=0.0 )
@@ -357,7 +357,7 @@ int shape_quad8( NuMeRiC *Na, int inc=1, const NuMeRiC &xi=0.0, const NuMeRiC &e
 	\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[-1,1]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-		\image html quad8.pdf
+		\image html quad8.jpg
 	*/
 template < class NuMeRiC >
 	int dshape_quad8( NuMeRiC *dNa, int lda, const NuMeRiC &xi=0.0, const NuMeRiC &eta=0.0 )
@@ -393,7 +393,7 @@ template < class NuMeRiC >
 			\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[-1,1]
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[-1,1]
 
-		\image html quad9.pdf
+		\image html quad9.jpg
 	
 	*/
 template < class NuMeRiC >
@@ -422,7 +422,7 @@ template < class NuMeRiC >
 	\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[-1,1]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-		\image html quad9.pdf
+		\image html quad9.jpg
 		
 	*/
 template < class NuMeRiC >
@@ -450,7 +450,7 @@ template < class NuMeRiC >
 			\param xi the point in the parent coordinate space where the shape functions are evalueated at xi=[-1,1]
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at eta=[-1,1]
 
-		\image html quad12.pdf
+		\image html quad12.jpg
 
 	*/
 template < class NuMeRiC >
@@ -489,7 +489,7 @@ template < class NuMeRiC >
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
 
-	\image html quad12.pdf
+	\image html quad12.jpg
 
 	*/
 template < class NuMeRiC >
@@ -551,7 +551,7 @@ template < class NuMeRiC >
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at
 
 
-			\image html tetra4.pdf
+			\image html tetra4.jpg
 	
 	*/
 template < class NuMeRiC >
@@ -576,7 +576,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at  
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-	\image html tetra4.pdf
+	\image html tetra4.jpg
 
 	*/
 	template < class NuMeRiC >
@@ -602,7 +602,7 @@ template < class NuMeRiC >
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at
 
 
-			\image html tetra10.pdf
+			\image html tetra10.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -636,7 +636,7 @@ template < class NuMeRiC >
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
 
-	\image html tetra10.pdf
+	\image html tetra10.jpg
 
 	*/
 	template < class NuMeRiC >
@@ -670,7 +670,7 @@ template < class NuMeRiC >
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]
 
 
-			\image html hexa8.pdf
+			\image html hexa8.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -698,7 +698,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evaluated at  
 	\param edim (optional) on returns contains the dimension of the element in the parent space
 
-			\image html hexa8.pdf
+			\image html hexa8.jpg
 
 	*/
 	template < class NuMeRiC >
@@ -726,7 +726,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[-1,1] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]
 
-			\image html hexa20.pdf
+			\image html hexa20.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -766,7 +766,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at  
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-			\image html hexa20.pdf
+			\image html hexa20.jpg
 
 	*/
 	template < class NuMeRiC >
@@ -846,7 +846,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[-1,1] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]
 
-			\image html hexa27.pdf
+			\image html hexa27.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -866,7 +866,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at 
 	\param edim (optional) on returns contains the dimension of the element in the parament space 
 
-			\image html hexa27.pdf
+			\image html hexa27.jpg
 
 	*/
 	template < class NuMeRiC >
@@ -884,7 +884,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[0,1-xi] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]
 
-			\image html prism6.pdf
+			\image html prism6.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -911,7 +911,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]  
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-			\image html prism6.pdf
+			\image html prism6.jpg
 
 	*/
 	template < class NuMeRiC >
@@ -937,7 +937,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[0,1-xi] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]
 
-			\image html prism12.pdf
+			\image html prism12.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -958,7 +958,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1] 
 	\param edim (optional) on returns contains the dimension of the element in the parament space 
 
-			\image html prism12.pdf
+			\image html prism12.jpg
 
 	*/
 	template < class NuMeRiC >
@@ -978,7 +978,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[0,1-xi] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]
 
-			\image html prism15.pdf	
+			\image html prism15.jpg	
 	*/
 	template < class NuMeRiC >
 	int shape_prism15( NuMeRiC *Na, int inc=1, const NuMeRiC &xi=ONETHIRD, const NuMeRiC &eta=ONETHIRD, 
@@ -1017,7 +1017,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[0,1-xi] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1]
 
-			\image html prism18.pdf	
+			\image html prism18.jpg	
 	*/
 	template < class NuMeRiC >
 	int shape_prism18( NuMeRiC *Na, int inc=1, const NuMeRiC &xi=ONETHIRD, const NuMeRiC &eta=ONETHIRD, 
@@ -1055,7 +1055,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[-1,1] 
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-			\image html prism18.pdf	
+			\image html prism18.jpg	
 
 	*/
 	template < class NuMeRiC >
@@ -1135,7 +1135,7 @@ template < class NuMeRiC >
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[0,1]
 
 
-			\image html pyramid5.pdf	
+			\image html pyramid5.jpg	
 	
 	*/
 	template < class NuMeRiC >
@@ -1155,7 +1155,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[0,1]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 	
-		\image html pyramid5.pdf
+		\image html pyramid5.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -1174,7 +1174,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[-1,1] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[0,1]
 
-				\image html pyramid13.pdf
+				\image html pyramid13.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -1194,7 +1194,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[0,1]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 
-		\image html pyramid13.pdf
+		\image html pyramid13.jpg
 	*/
 	template < class NuMeRiC >
 	int dshape_pyramid13( NuMeRiC *dNa, int lda, const NuMeRiC &xi=0.0, const NuMeRiC &eta=0.0, const NuMeRiC &zeta=0.125 )
@@ -1212,7 +1212,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at, eta=[-1,1] 
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[0,1]
 	
-		\image html pyramid14.pdf	
+		\image html pyramid14.jpg	
 	
 	*/
 	template < class NuMeRiC >
@@ -1232,7 +1232,7 @@ template < class NuMeRiC >
 	\param zeta the point in the parent coordinate space where the shape functions are evalueated at, zeta=[0,1]
 	\param edim (optional) on returns contains the dimension of the element in the parament space
 	
-		\image html pyramid14.pdf
+		\image html pyramid14.jpg
 	
 	*/
 	template < class NuMeRiC >
@@ -1253,7 +1253,7 @@ template < class NuMeRiC >
 			\param eta the point in the parent coordinate space where the shape functions are evalueated at  
 			\param zeta the point in the parent coordinate space where the shape functions are evalueated at 
 
-	\image html point1.pdf
+	\image html point1.jpg
 	
 	*/
 	template < class NuMeRiC >
