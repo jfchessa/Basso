@@ -23,7 +23,7 @@ namespace Basso {
 
 	Parent coordinate space and geometric nomenclature for Basso_Quad4 
 
-\image html quad4.pdf
+\image html quad4.jpg
                          
 */
 

@@ -24,7 +24,7 @@ namespace Basso {
 	Parent coordinate space and geometric nomenclature for Basso_Tetra10 
 
 
-\image html tetra10.pdf
+\image html tetra10.jpg
                          
 */
 

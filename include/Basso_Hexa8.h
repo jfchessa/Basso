@@ -23,7 +23,7 @@ namespace Basso {
 
 	Parent coordinate space and geometric nomenclature for Basso_Hexa8 
 	
-	\image html hexa8.pdf
+	\image html hexa8.jpg
                          
 */
 

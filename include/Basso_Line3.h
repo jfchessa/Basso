@@ -23,7 +23,7 @@ namespace Basso {
 
 	Parent coordinate space and geometric nomenclature for Basso_Line3 
 
-\image html line3.pdf
+\image html line3.jpg
                          
 */
 

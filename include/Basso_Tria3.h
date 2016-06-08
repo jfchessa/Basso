@@ -25,7 +25,7 @@ namespace Basso
 		
 		A dervied class to abstract a three node triangular element
 		
-\image html tria3.pdf		
+\image html tria3.jpg		
 	
 	*/
 	class Basso_Tria3 : public Basso_ParentElement

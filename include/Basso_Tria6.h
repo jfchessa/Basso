@@ -26,7 +26,7 @@ namespace Basso {
 	Parent coordinate space and geometric nomenclature for Basso_Tria6 
 
 
-\image html tria6.pdf
+\image html tria6.jpg
                          
 */
 
