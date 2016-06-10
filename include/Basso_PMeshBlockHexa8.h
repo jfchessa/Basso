@@ -27,7 +27,7 @@ public:
 	\param p (default 0) the current active partition
 	*/
 	Basso_PMeshBlockHexa8( const T *x1, const T *x2, const T *x3, const T *x4,
-		const T *x5, const T *x6, const T *x7, const T *x8, int p=0 ) : Basso_MeshBlockHexa8(x1,x2,x3,x4,x5,x6,x7,x8) 
+		const T *x5, const T *x6, const T *x7, const T *x8, int p=0 ) : Basso_MeshBlockHexa8<T>(x1,x2,x3,x4,x5,x6,x7,x8) 
 		{ SetNumPartitions(1,1,1); pid_=p;  }
 		
 	/** Constructor, using the 2 diagonal vertecies. The edges are assumed to be aligned with the x, y and z axis.
@@ -35,7 +35,7 @@ public:
 	\param x1-x7 the eight vertecies
 	\param p (default 0) the current active partition
 	*/
-	Basso_PMeshBlockHexa8( const T *x1, const T *x7, int p=0  ) : Basso_MeshBlockHexa8(x1,x7) 
+	Basso_PMeshBlockHexa8( const T *x1, const T *x7, int p=0  ) : Basso_MeshBlockHexa8<T>(x1,x7) 
 		{ SetNumPartitions(1,1,1); pid_=p; }
 	
 	/** Sets the number of partitions in the 1, 2 and 3 directions
@@ -251,7 +251,7 @@ void Basso_PMeshBlockHexa8<T>::GlobalNodeIDs( Basso_Array<BASSO_IDTYPE> &gnids )
 
 
 template<class T>
-Basso_PMeshBlockHexa8<T>::SideSegs( Basso_Array2D<BASSO_IDTYPE> &conn, int id )  const
+void Basso_PMeshBlockHexa8<T>::SideSegs( Basso_Array2D<BASSO_IDTYPE> &conn, int id )  const
 {
 	int I, J, K;
 	GetIJK(I,J,K);
@@ -265,8 +265,8 @@ Basso_PMeshBlockHexa8<T>::SideSegs( Basso_Array2D<BASSO_IDTYPE> &conn, int id ) 
 		
 		conn.Resize(4, (nnp1-1)*(nnp3-1) );
 		cptrn[0]=0; cptrn[1]=1; cptrn[2]=nnp1*nnp2+1; cptrn[3]=nnp1*nnp2;	
-		gen_conn_2d( cptrn, 4, nn1-1, nn3-1, 
-			conn.Data(), conn.LDA(), 1, nn1*(nn2-1)+2 );
+		gen_conn_2d( cptrn, 4, nnp1-1, nnp3-1, 
+			conn.Data(), conn.LDA(), 1, nnp1*(nnp2-1)+2 );
 		break;
 		
 		case 1:  // +1 normal face 
@@ -331,7 +331,7 @@ Basso_PMeshBlockHexa8<T>::SideSegs( Basso_Array2D<BASSO_IDTYPE> &conn, int id ) 
 
 
 template<class T>
-void Basso_MeshBlockPHexa8<T>::EdgeSegs( Basso_Array2D<BASSO_IDTYPE> &conn, int id ) const
+void Basso_PMeshBlockHexa8<T>::EdgeSegs( Basso_Array2D<BASSO_IDTYPE> &conn, int id ) const
 {
 	
 	int I, J, K;
