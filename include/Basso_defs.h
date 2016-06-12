@@ -47,9 +47,10 @@ int (-2,147,483,647 to 2,147,483,647)
 unsigned int (0 to 4,294,967,295) 
 int long (-6e18 to 6e18)
 unsigned int long (0 to 18e8)
+long long  <- for trilinos
 */
 #ifndef BASSO_IDTYPE
-#define BASSO_IDTYPE unsigned int
+#define BASSO_IDTYPE int
 #endif
 
 

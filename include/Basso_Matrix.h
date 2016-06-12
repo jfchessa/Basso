@@ -57,6 +57,7 @@ public:
     // operator overloads    
     inline Basso_Matrix<T> &operator = ( const Basso_Matrix<T> &v ) { this->Copy(v); return *this; }
     inline Basso_Matrix<T> &operator = ( const T &s ) { this->Copy(s); return *this; }
+    inline Basso_Matrix<T> &operator = ( const string &s ) { this->Copy(s); return *this; }
 	
 	virtual void Print( std::ostream &out=BASSO_STDOUT ) const 
 	{

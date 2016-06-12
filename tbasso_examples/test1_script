@@ -1,0 +1,27 @@
+#!/bin/bash
+#----------------------------------------------------
+# Example SLURM job script to run MPI applications
+#
+#  To run this do  
+#      login1$ sbatch myjobscript
+# 
+#----------------------------------------------------
+#SBATCH -J mpi_job       # Job name
+#SBATCH -o mpi_job.o%j   # Name of stdout output file
+#SBATCH -e mpi_job.o%j   # Name of stdout output file
+#SBATCH -p development   # Queue name {normal, development}
+#SBATCH -N 1             # Total number of nodes requested
+#SBATCH -n 8             # Total number of mpi tasks requested
+#SBATCH -t 01:30:00      # Run time (hh:mm:ss) - 1.5 hours
+# The next line is required if the user has more than one project (which I do)
+#SBATCH -A EBM-MOdeling  # Project/allocation number
+
+# This example will run -n# MPI tasks on -N# nodes
+
+# Launch the MPI application using ibrun
+ibrun ./test1
+
+#Note:  ibrun does not bind tasks or threads by default
+#       To bind task/threads to sockets or cores, you must use
+#       ibrun with tacc_affinity or use the "srun" command directly
+#       with the "--cpu_bind" option.

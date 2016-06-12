@@ -61,8 +61,9 @@ public:
 	void Zero() { this->SetValue( 0.0 ); }
 	
     // operator overloads    
-    inline Basso_Vector<T> &operator = ( const Basso_Vector<T> &v ) { Copy(v); return *this; }
-    inline Basso_Vector<T> &operator = ( const T &s ) { Copy(s); return *this; }
+    inline Basso_Vector<T> &operator = ( const Basso_Vector<T> &v ) { this->Copy(v); return *this; }
+    inline Basso_Vector<T> &operator = ( const T &s ) { this->Copy(s); return *this; }
+    inline Basso_Vector<T> &operator = ( const string &s ) { this->Copy(s); return *this; }
     
     inline Basso_Vector<T> &operator += ( const Basso_Vector<T> &v ) { AXPY( 1.0, v.Data() ); return *this; }
     inline Basso_Vector<T> &operator -= ( const Basso_Vector<T> &v ) { AXPY( -1.0, v.Data() ); return *this; }

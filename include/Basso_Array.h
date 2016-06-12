@@ -146,6 +146,7 @@ public:
 	
 	/**
 	Constructor from a string
+	example:  v = "1.0 2.0 3.14 -2.6";
 	*/
     Basso_Array( const string &s ) : dimMax(25), dim(0) { fVptr = new (std::nothrow) T[dimMax]; Copy(s); }
 	
@@ -162,6 +163,8 @@ public:
 	* */
 	//Basso_Array( indx_type r, indx_type rmax ) : dimMax(rmax), dim(r) { fVptr = new T[dimMax]; }
 
+	
+	
     /** Copy constructor
     */
     Basso_Array( const Basso_Array<T> &v ) : fVptr(BASSO_NULL_PTR), dimMax(0), dim(0) { Copy(v); }
@@ -175,7 +178,6 @@ public:
 	
 	/** Sets all values in the array to v */
 	void SetValue( T v );	
-	
 	
 	// Copy constructs
     void Copy( const T *b, indx_type incb=1 );
