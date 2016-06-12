@@ -26,6 +26,7 @@
 #include "Basso_ParentElement.h"
 #include "Basso_write_ensight.h"
 #include "Basso_Hexa8.h"
+#include "Basso_nfeaops.h"
 
 // tbasso includes
 #include "TBasso_DOFMap.h"
@@ -35,27 +36,6 @@
 using namespace std;
 using namespace Basso;
 
-/*
-class TBasso_FELinearOperator
-{
-public:
-	TBasso_FELinearOperator( const TBasso_DOFMap &gdof ) { gdof_ptr_ = &gdof; }
-	
-	void StiffnessMatrix( TBasso_FECrsMatrix &Kmat,  const Basso_nMatrix &node, 
-	       const Basso_iMatrix &conn, const Basso_ParentElement *element, 
-		   const Basso_nMatrix &cmat, Basso_Numeric a=1.0 ) const;
-
-protected:
-	const TBasso_DOFMap *gdof_ptr_;
-	
-};
-
-void TBasso_FELinearOperator::StiffnessMatrix( TBasso_FECrsMatrix &Kmat,  const Basso_nMatrix &node, 
-		const Basso_iMatrix &conn, const Basso_ParentElement *element, const Basso_nMatrix &cmat,
-		Basso_Numeric a ) const
-{
-}			
-*/
 
 
 /*
@@ -98,11 +78,33 @@ int main(int argc, char* argv[])
 	
 	// Compute the global stiffness matrix
  	TBasso_FECrsMatrix Kmat(GDOFMap,conn);
-	//TBasso_FELinearOperator feop(GDOFMap);
+	Basso_Array<BASSO_IDTYPE> sctr(3*8);
+	for ( int e=0; e<conn.NumCols(); ++e )
+	{
+		GDOFMap.SetScatter(conn[e],8,sctr);
+		Kmat.InitialFill(sctr);
+	}
 	Basso_Hexa8 hexa8;
-	Basso_nMatrix cmat(6,6);
-	//feop.StiffnessMatrix( Kmat, nodes, conn, &hexa8, cmat );
-	//Kmat.FillComplete();
+	Basso_nMatrix ecoord(3,8), bmat(6,3*8), ke(3*8,3*8), cmat(6,6);
+	Basso_Numeric E=10e6, nu=.3, jac;
+	Basso_QuadratureRule qrule;
+	hexa8.Quadrature(2,qrule);
+	cmat_3d( cmat, E, nu );
+	for ( int e=0; e<conn.N(); ++e )
+	{
+		element_coordinates( nodes, conn[e], conn.M(), ecoord );
+		ke.Zero();
+		GDOFMap.SetScatter(conn[e],conn.M(),sctr);
+		Basso_QuadratureRule::ConstIterator qitr;
+		for ( qitr=qrule.Begin(); qitr!=qrule.End(); ++qitr )
+		{
+			jac = hexa8.Bmatrix( qitr->Pt(), ecoord, bmat );
+			cout << bmat << "\n";
+			multbtcb( 'n', jac*(qitr->Wt()), bmat, cmat, 1.0, ke );
+		}
+		Kmat.ScatterMatrix(ke,sctr);
+	}
+	Kmat.FillComplete();
 	
 	// compute the rhs
 	//TBasso_FEVector rhs(GDOFMap); 

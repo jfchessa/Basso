@@ -18,6 +18,7 @@
 #include "Basso_Numeric.h"
 #include "Basso_iMatrix.h"
 #include "Basso_nMatrix.h"
+#include "Basso_nfeaops.h"
 
 // tbasso includes
 #include "TBasso_DOFMap.h"
@@ -25,21 +26,6 @@
 using namespace std;
 using namespace Basso;
 
-template < class InTtYpE >
-void get_gnids( const Basso_Array2D<InTtYpE> &conn, Basso_Array<InTtYpE> &gnids )
-{
-	set<InTtYpE> gnidSet;
-	
-	const InTtYpE *nptr = conn.Data();
-	for ( int i=0; i<conn.Length(); ++i, ++nptr )
-		gnidSet.insert(*nptr);
-	gnids.Resize(gnidSet.size());
-	
-	typename set<InTtYpE>::const_iterator sitr;
-	InTtYpE *gptr = gnids.Data();
-	for ( sitr=gnidSet.begin(); sitr!=gnidSet.end(); ++sitr, ++gptr )
-		*gptr = *sitr;
-}
 
 /*
   This example requires 2 processors

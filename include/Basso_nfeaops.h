@@ -10,6 +10,10 @@ Some finite element operations in Basso_feaops.h, but using nMatrix and nVector 
 #ifndef _BASSO_NUMERIC_FEA_OPERATIONS_H_
 #define _BASSO_NUMERIC_FEA_OPERATIONS_H_
 
+// std includes
+#include <set>
+
+// Basso includes
 #include "Basso_nVector.h"
 #include "Basso_iVector.h"
 #include "Basso_nMatrix.h"
@@ -112,6 +116,28 @@ void multbtcb( char trans, Basso_Numeric alpha, const Basso_nMatrix &B,
 {
     multbtcb( 'n', B.M(), B.N(), alpha, B.Data(), B.LDA(), C.Data(), C.LDA(), beta, D.Data(), D.LDA() );  
 }
+
+/**
+Returns an ordered array of the node ids in a connectivity matris
+\param conn the element connectivity matrix
+\param gnids on return contains the node ids
+*/
+template < class InTtYpE >
+void get_gnids( const Basso_Array2D<InTtYpE> &conn, Basso_Array<InTtYpE> &gnids )
+{
+	set<InTtYpE> gnidSet;
+	
+	const InTtYpE *nptr = conn.Data();
+	for ( int i=0; i<conn.Length(); ++i, ++nptr )
+		gnidSet.insert(*nptr);
+	gnids.Resize(gnidSet.size());
+	
+	typename set<InTtYpE>::const_iterator sitr;
+	InTtYpE *gptr = gnids.Data();
+	for ( sitr=gnidSet.begin(); sitr!=gnidSet.end(); ++sitr, ++gptr )
+		*gptr = *sitr;
+}
+
 
 } // end of namespace
 
