@@ -211,6 +211,16 @@ public:
 	void Scatter( const T *aptr, const BASSO_IDTYPE *iis, indx_type n );
 	
 	/**
+	Scatters an array of values into the Array.
+	*/
+	template< class NuMvEcToR, class InDxVeCt >
+	void Scatter( const NuMvEcToR &v, const InDxVeCt &iis )
+	{
+		for ( indx_type i=0; i<iis.Length(); ++i )
+			fVptr[ iis[i] ] += v[i];
+	}
+	
+	/**
 	Gathers the values in the array at the locations iis and
 	puts them into aptr.
 	\param aptr - on return has the gather data
@@ -297,7 +307,7 @@ protected:
 template <class T>
 void Basso_Array<T>::SetValue( T v )
 {
-	const T *aptr = fVptr;
+	T *aptr = fVptr;
 	for ( indx_type i=0; i<dim; ++i, ++aptr )
     	*aptr = v;
 }
@@ -315,6 +325,9 @@ int Basso_Array<T>::WriteMatlab( const string &filename ) const
 	for ( indx_type i=0; i<dim; ++i, ++aptr )
     	outfile << *aptr << "\n";
 
+	
+	outfile.close();
+	
 	return 0;
    
 }
@@ -327,7 +340,6 @@ void Basso_Array<T>::Scatter( const T *aptr, const BASSO_IDTYPE *iis, indx_type 
 	for ( indx_type i=0; i<n; ++i, ++iptr, ++vptr )
 		fVptr[ *iptr ] += *vptr;
 }
-
 
 template< class T >
 void Basso_Array<T>::Gather( T *aptr, const BASSO_IDTYPE *iis, indx_type n ) const

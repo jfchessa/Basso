@@ -46,6 +46,9 @@ public:
 	Basso_Vector( indx_type n ) : Basso_Array<T>(n) { }
 	Basso_Vector( indx_type n, T v ) : Basso_Array<T>(n,v) { }
 	Basso_Vector( const Basso_Vector<T> &b ) : Basso_Array<T>(b) { }
+	
+	 /** conversion operator; this allows for the point to convert to a Basso_Array  **/
+    //operator Basso_Array<T> &() { return  *this; }
 
     // basic linear algebra operations (mostly via BLAS)
     void SCAL( const T a ) { scal( this->N(), a, this->Data(), 1 ); }

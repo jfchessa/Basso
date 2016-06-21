@@ -27,6 +27,7 @@ This class requires Trilinos Epetra
 // basso includes
 #include "Basso_defs.h"
 #include "Basso_Array.h"
+#include "Basso_DOFMap.h"
 
 namespace Basso
 {
@@ -37,7 +38,7 @@ namespace Basso
 	
 	This class requires Trilinos Epetra	
 */
-class TBasso_DOFMap
+class TBasso_DOFMap : public Basso_DOFMap
 {
 public:
 	/**
@@ -50,6 +51,18 @@ public:
 				: gdof_map_(nldof,gnids.Length())
 		{ fixed_=false; SetGNIDs(gnids); owned_gdof_map_=NULL; }
 
+	
+	/**
+	Constructor that fully sets up the GDOFMap.  If calls FixDOFMap.
+	\param Comm -  The Epetra mpi commuication operator
+	\param gnids - an array of the global node ids that are supported by the processor.  This array needs to 
+	map onto the rows of the local node coordinate matrix
+	\param nldof the number of dofs active on each node.  Default value is 6.
+	*/	
+	TBasso_DOFMap( const Epetra_Comm &Comm, const Basso_Array<BASSO_IDTYPE> &gnids, int nldof=6 ) 
+				: gdof_map_(nldof,gnids.Length())
+		{ fixed_=false; SetGNIDs(gnids); owned_gdof_map_=NULL; FixDOFMap(Comm); }
+		
 	/** Deconstructor */
 	~TBasso_DOFMap() { if ( owned_gdof_map_!=NULL ) delete owned_gdof_map_; }
 		
@@ -98,7 +111,7 @@ public:
 	\param sctr on return has the scatter vector to the global dofs.  It should be of length econn.Length()*NumDofPerNode(). 
 	\param ldofs an array that has the local dofs to be used in forming the scatter vector.  Again there is no error checking here.
 	*/
-	void SetScatter( const BASSO_IDTYPE *econn, int nne, Basso_Array<BASSO_IDTYPE> &sctr, const Basso_Arrray<int>  &ldofs ) const;
+	void SetScatter( const BASSO_IDTYPE *econn, int nne, Basso_Array<BASSO_IDTYPE> &sctr, const Basso_Array<int>  &ldofs ) const;
 	
 	/**Returns the global dof given a lodal node id and a local dof
 	 \param lnid the local node id
@@ -114,6 +127,35 @@ public:
 	*/
 	const Epetra_Map &OwnedGDOFMap() const { return *owned_gdof_map_; }
 	
+	/**Sets the dofs in the map 
+	\param ldofs on return has the local dofs active in the map
+	*/
+	void LDOFs( Basso_Array<int> & ldofs ) const;
+	
+	/**Returns the number of total global dofs defined by the map*/
+	BASSO_IDTYPE MaxAllGDOF() const 
+	{ 
+		if ( owned_gdof_map_ == NULL )
+			return 0;
+		return owned_gdof_map_->MaxAllGID64(); 
+	}
+	/**Returns the number of total global dofs defined by the map*/
+	BASSO_IDTYPE NumTotalGDOFs() const 
+	{ 
+		if ( owned_gdof_map_ == NULL )
+			return 0;
+		return owned_gdof_map_->NumGlobalElements64(); 
+	}
+	
+	/**Returns the number of global dofs on the processor*/
+	BASSO_IDTYPE NumMyGDOFs() const 
+	{ 
+		if ( owned_gdof_map_ == NULL )
+			return 0;
+		return owned_gdof_map_->NumMyElements(); 
+	}
+	
+	/**Prints the map.  Also is used for  << overlaod.*/
 	virtual void Print( std::ostream &out=BASSO_STDOUT ) const;
 	
 protected:
@@ -123,6 +165,13 @@ protected:
 	bool fixed_;
 	Epetra_Map *owned_gdof_map_;
 };
+
+void TBasso_DOFMap::LDOFs( Basso_Array<int> & ldofs ) const
+{
+	ldofs.Resize( NumDofPerNode() );
+	for ( int s=0; s<ldofs.Length(); ++ s )
+		ldofs[s] = s;
+}
 
 void TBasso_DOFMap::Print( std::ostream &out ) const 
 {
@@ -155,18 +204,20 @@ void TBasso_DOFMap::SetScatter( const BASSO_IDTYPE *econn, int nne, Basso_Array<
 	int s;
 	for ( I=0; I<nne; ++I, ++nptr )
 		for ( s=0; s<NumDofPerNode(); ++s, ++cptr ) 
-			*cptr = gdof_map_[I][s];		
+			*cptr = gdof_map_[*nptr][s];		
 }
 
-void TBasso_DOFMap::SetScatter( const BASSO_IDTYPE *econn, int nne, Basso_Array<BASSO_IDTYPE> &sctr, const Basso_Arrray<int>  &ldofs ) const
+void TBasso_DOFMap::SetScatter( const BASSO_IDTYPE *econn, int nne, Basso_Array<BASSO_IDTYPE> &sctr, const Basso_Array<int>  &ldofs ) const
 {
 	const BASSO_IDTYPE *nptr = econn;
 	BASSO_IDTYPE *cptr = sctr.Data(), I;
 	int s;
-	const int *sptr=ldofs.Data();
 	for ( I=0; I<nne; ++I, ++nptr )
+	{
+		const int *sptr=ldofs.Data();
 		for ( s=0; s<ldofs.Length(); ++s, ++cptr, ++sptr ) 
-			*cptr = gdof_map_[I][*sptr];		
+			*cptr = gdof_map_[*nptr][*sptr];
+	}		
 }
 
 void TBasso_DOFMap::FixDOFMap( const Epetra_Comm &Comm )
@@ -227,21 +278,23 @@ void TBasso_DOFMap::FixDOFMap( const Epetra_Comm &Comm )
 		Comm.Broadcast( &gdof, 1, pid );
 	}
 	
+	owned_gdof_map_ = new Epetra_Map(-1,numMyGDOFs,myGDOFs.Values(),0,Comm);
+	
 	/* ============ Compute the GDOF for the shared nids ============= */ 
-	owned_gdof_map_ = new Epetra_Map(-1,numMyNodes,myNIDs.Values(),0,Comm);
+	Epetra_Map ownedNodeMap(-1,numMyNodes,myNIDs.Values(),0,Comm);  
 	Epetra_Map sharedNodeMap(-1,numSharedNodes,gnids_.Data(),0,Comm);
-	Epetra_IntVector startMyGDOF(*owned_gdof_map_), startSharedGDOF(sharedNodeMap);   
+	Epetra_IntVector startMyGDOF(ownedNodeMap), startSharedGDOF(sharedNodeMap);   
 	for  ( int i=0; i<numMyNodes; ++i )
 		startMyGDOF[i]=myGDOFs[NumDofPerNode()*i];
 	
-	Epetra_Import imprt(sharedNodeMap,*owned_gdof_map_);  
+	Epetra_Import imprt(sharedNodeMap,ownedNodeMap);  
+	
 	startSharedGDOF.Import(startMyGDOF,imprt,Insert);
 	
 	for  ( int i=0; i<numSharedNodes; ++i )
 		for ( int s=0; s<NumDofPerNode(); ++s )
 			gdof_map_[i][s] = startSharedGDOF[i]+s;
 		
-	
 	// done! so set as fixed
 	fixed_ = true;
 

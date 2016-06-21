@@ -79,9 +79,9 @@ void Basso_MeshBlockHexa8<T>::SetElementSize( T he )
 	l2 = abs( 0.25*(v1[1]+v5[1]+v2[1]+v6[1]) - 0.25*(v3[1]+v4[1]+v7[1]+v8[1]) );
 	l3 = abs( 0.25*(v1[2]+v2[2]+v3[2]+v4[2]) - 0.25*(v5[2]+v6[2]+v7[2]+v8[2]) );
 	
-	nn1 = ceil(l1/he);
-	nn2 = ceil(l2/he);
-	nn3 = ceil(l3/he);
+	nn1 = ceil(l1/he)+1;
+	nn2 = ceil(l2/he)+1;
+	nn3 = ceil(l3/he)+1;
 }
 
  

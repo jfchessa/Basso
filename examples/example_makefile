@@ -6,18 +6,18 @@
 CPPC = icc
 CPPFLAGS = -O3 
 
-BASSO_DIR = /home1/02736/jfchessa/Basso
+BASSO_DIR = /home1/02736/jfchessa/Basso/
 
 # BLAS and LAPACK
 BLAS_LAPACK_DIR =  
 BLAS_LAPACK_LIB =  -mkl
 
 # Basso
-BASSO_INC_DIR = -I$(BASSO_DIR)/include
+BASSO_INC_DIR = -I$(BASSO_DIR)include
 BASSO_LIB_DIR = 
 
 # trilinos
-#TRILINOS_INC_DIR = -I$(TACC_TRILINOS_DIR)/include -I$(TACC_MKL_INC)
+#TRILINOS_INC_DIR = -I$(TACC_TRILINOS_DIR)include -I$(TACC_MKL_INC)
 #TRILINOS_LIB_DIR = -L$(TACC_TRILINOS_LIB) -L$(TACC_MKL_LIB)
 #TRILINOS_LIBS_TRIL = -lepetra -laztecoo 
  

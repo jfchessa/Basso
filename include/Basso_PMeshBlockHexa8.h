@@ -242,7 +242,7 @@ void Basso_PMeshBlockHexa8<T>::GlobalNodeIDs( Basso_Array<BASSO_IDTYPE> &gnids )
 	GetIJK(I,J,K);
 	
 	BASSO_IDTYPE *gptr = gnids.Data();
-	n = K*nl + J*nr + I;
+	n = K*nl + J*nr*(this->nnp2 - 1) + I*(this->nnp1 - 1);
 	for ( int k=0; k<nnp3; ++k, n+=dnl )
 		for ( int j=0; j<nnp2; ++j, n+=dnr )
 			for ( int i=0; i<nnp1; ++i, ++n, ++gptr )

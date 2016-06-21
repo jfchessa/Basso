@@ -333,6 +333,8 @@ int Basso_Array2D<T>::WriteMatlab( const string &filename ) const
 		outfile << "\n";
 	}
    
+	outfile.close();
+	
 	return 0;
 }
 

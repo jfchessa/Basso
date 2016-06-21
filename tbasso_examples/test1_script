@@ -11,7 +11,7 @@
 #SBATCH -e mpi_job.o%j   # Name of stdout output file
 #SBATCH -p development   # Queue name {normal, development}
 #SBATCH -N 1             # Total number of nodes requested
-#SBATCH -n 8             # Total number of mpi tasks requested
+#SBATCH -n 2             # Total number of mpi tasks requested
 #SBATCH -t 01:30:00      # Run time (hh:mm:ss) - 1.5 hours
 # The next line is required if the user has more than one project (which I do)
 #SBATCH -A EBM-MOdeling  # Project/allocation number

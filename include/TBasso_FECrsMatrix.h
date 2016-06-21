@@ -66,33 +66,67 @@ public:
 	\param ke the square matrix to be added into the sparse matrix
 	\param sctr the global dofs (row and coulumn) to add the matrix into.
 	*/
-	void ScatterMatrix( const Basso_nMatrix &ke, const Basso_Array<BASSO_IDTYPE> &sctr );
+	void Scatter( const Basso_nMatrix &ke, const Basso_Array<BASSO_IDTYPE> &sctr );
 	
 	/**To be called when teh matrix fill in is complete.  This will move all the off processor
-	values onto the processor.  This needs to be done before yoou atempt to solve the system.
-	This is simple a call to the Epetra_FECrsMatrix FillComplete member function, so you can see
+	values onto the processor.  This needs to be done before you atempt to solve the system.
+	This is simple a call to the Epetra_FECrsMatrix GlobalAssemble member function, so you can see
 	that documention for more details.
 	*/
-	void FillComplete() { crs_.FillComplete(); }
-	
-	/**Returns a constant reference to the underlying Epetra_FECrsMatrix class.*/
-	const Epetra_FECrsMatrix &EpetraMatrix() const { return crs_; }
+	void FillComplete() { crs_.GlobalAssemble(); }
 	
 	/**Returns a non-constant reference to the underlying Epetra_FECrsMatrix class.*/
-	Epetra_FECrsMatrix &EpetraMatrix()             { return crs_; }
+	Epetra_FECrsMatrix &EpetraObject()                 { return crs_; }
+	const Epetra_FECrsMatrix &EpetraObject()     const { return crs_; }
 	
 	/**Prints the matrix.  This function os overloaded with the << operator.*/
 	virtual void Print( std::ostream &out=BASSO_STDOUT ) const;
 	
+	/** Write to an ASCII matlab file */
+	int WriteMatlab( const string &filename ) const;
 
 protected:
 	Epetra_FECrsMatrix crs_;
 	
 };
 
+
+int TBasso_FECrsMatrix::WriteMatlab( const string &filename ) const
+{	
+	std::ofstream outfile;
+	
+    outfile.open( filename.c_str(), ios::out );
+    if ( !outfile )
+        return 1;
+
+	outfile << "NOt yet implemented\n";
+	
+/* 	const Epetra_Comm &lcomm = crs_.Map().Comm();
+	int mnnzr = crs_.MaxNumEntries();
+	double values[mnnzr];
+	int indices[mnnzr];
+	for ( int p=0; p<lcomm.NumProc(); ++p )
+	{
+		if ( lcomm.MyPID() == p )
+			for ( int i=0; i<crs_.NumMyRows(); ++i )
+			{
+				int I = crs_.GRID(i), nnz;
+				crs_.ExtractMyRowCopy( i, mnnzr, nnz, values, indices);
+				for ( int j=0; j<nnz; ++ j )
+					outfile << setw(10) << I << setw(10) << indices[j] << setw(15) << values[j] << "\n";
+			}
+		lcomm.Barrier();		
+	}
+    lcomm.Barrier(); */
+	
+	outfile.close();
+	
+	return 0;
+}
+
 void TBasso_FECrsMatrix::Print( std::ostream &out ) const
 {
-	out << "TBasso_FECrsMatrix wraper for Epetra_FECrsMatris" << crs_;
+	out << "TBasso_FECrsMatrix wrapper for Epetra_FECrsMatrix" << crs_;
 }
 
 void TBasso_FECrsMatrix::InitialFill( const Basso_Array<BASSO_IDTYPE> &sctr ) 
@@ -110,11 +144,12 @@ void TBasso_FECrsMatrix::InitialFill( const TBasso_DOFMap &gdof, const Basso_iMa
 	for ( int e=0; e<conn.NumCols(); ++e )
 	{
 		gdof.SetScatter( conn[e], conn.NumRows(), sctr );
+		//cout << sctr << " TBasso_FECrsMatrix.h:111\n";
 		crs_.InsertGlobalValues(sctr.Length(),sctr.Data(),zeros.Data());
 	}
 }
 
-void TBasso_FECrsMatrix::ScatterMatrix( const Basso_nMatrix &ke, const Basso_Array<BASSO_IDTYPE> &sctr ) 
+void TBasso_FECrsMatrix::Scatter( const Basso_nMatrix &ke, const Basso_Array<BASSO_IDTYPE> &sctr ) 
 { 
 	crs_.SumIntoGlobalValues(sctr.Length(),sctr.Data(),ke.Data());
 }
