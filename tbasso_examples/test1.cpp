@@ -22,13 +22,14 @@
 #include "Basso_iMatrix.h"
 #include "Basso_nMatrix.h"
 #include "Basso_ParentElement.h"
-#include "Basso_write_ensight.h"
 #include "Basso_Hexa8.h"
 #include "Basso_Quad4.h"
 #include "Basso_nfeaops.h"
 
 #include "Basso_PointBCSet.h"
 #include "Basso_FaceBCSet.h"
+
+#include "Basso_VTK.h"
 
 // tbasso includes
 #include "TBasso_DOFMap.h"
@@ -139,10 +140,10 @@ int main(int argc, char* argv[])
 	ostringstream ss;
 	ss << comm.MyPID();
 	string filename = "test1_"+ss.str();
-	ensight_ascii_fegeometry( filename+".geom", nodes.Data(), nodes.N(), nodes.M(), nodes.LDA(),
-        conn.Data(), conn.N(), conn.M(), conn.LDA(), "hexa8" );
-	//ensight_ascii_field( filename+".disp", *data, nd );
-	ensight_case( filename, filename+".geom" ); 
+	
+	Basso_VTKUnstructuredGrid results(filename);
+	results.SetMesh(nodes,conn,&hexa8);
+	results.WriteFile();
 	
 #ifdef HAVE_MPI
 	MPI_Finalize() ; 
