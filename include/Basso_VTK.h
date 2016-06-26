@@ -53,6 +53,12 @@ class Basso_VTKDataArray
 		 *  \param out - the output stream to write the array to.		 
 		 */
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const = 0;
+		/**
+		 *  Prints the data arry information but no data in the vtk xml format to an output
+ 		 *  stream
+		 *  \param out - the output stream to write the array to.		 
+		 */
+		virtual void PrintInfo( std::ostream &out=BASSO_STDOUT  ) const = 0;
 		
 		/**
 		 *  The number of points in the data array
@@ -149,12 +155,19 @@ class Basso_VTKFloatDataArray : public Basso_VTKDataArray
 		 *  \param out - the output stream to write the array to.		 
 		 */
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
+		virtual void PrintInfo( std::ostream &out=BASSO_STDOUT  ) const;
 		
 	protected:
 		const Basso_Numeric *dptr;
 	
 };
 
+
+void Basso_VTKFloatDataArray::PrintInfo( std::ostream &out ) const 
+{	
+	out << "<DataArray type=\""+DataType()+"\" Name=\""+Name()+"\" format=\""+FormatType()+"\" " 
+			<< NumberOfComponents()+"/>\n";
+}
 
 void Basso_VTKFloatDataArray::Print( std::ostream &out ) const 
 {
@@ -223,6 +236,7 @@ class Basso_VTKIntDataArray : public Basso_VTKDataArray
 		 *  \param out - the output stream to write the array to.		 
 		 */
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
+		virtual void PrintInfo( std::ostream &out=BASSO_STDOUT  ) const;
 		
 	protected:
 		const BASSO_IDTYPE *dptr;
@@ -244,6 +258,12 @@ void Basso_VTKIntDataArray::Print( std::ostream &out ) const
 	}	
 	if ( i%ls != 0 ) out << "\n";
 	out << "</DataArray>\n"; 
+} 
+
+void Basso_VTKIntDataArray::PrintInfo( std::ostream &out ) const 
+{
+	out << "<DataArray type=\""+DataType()+"\" Name=\""+Name()+"\" format=\""+FormatType()+"\" " 
+			<< NumberOfComponents()+"/>\n";
 } 
 
 std::ostream &operator << ( std::ostream &out, const Basso_VTKIntDataArray &A )
@@ -296,6 +316,7 @@ class Basso_VTKUIntDataArray : public Basso_VTKDataArray
 		 *  \param out - the output stream to write the array to.		 
 		 */
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
+		virtual void PrintInfo( std::ostream &out=BASSO_STDOUT  ) const;
 		
 	protected:
 		const unsigned int *dptr;
@@ -318,6 +339,12 @@ void Basso_VTKUIntDataArray::Print( std::ostream &out ) const
 	}	
 	if ( i%ls != 0 ) out << "\n";
 	out << "</DataArray>\n"; 
+} 
+
+void Basso_VTKUIntDataArray::PrintInfo( std::ostream &out ) const 
+{
+	out << "<DataArray type=\""+DataType()+"\" Name=\""+Name()+"\" format=\""+FormatType()+"\" " 
+			<< NumberOfComponents()+"/>\n";
 } 
 
 std::ostream &operator << ( std::ostream &out, const Basso_VTKUIntDataArray &A )
@@ -354,6 +381,7 @@ class Basso_VTKPoints
 		 *  \param out - the output stream to write the array to.		 
 		 */
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
+		virtual void PrintInfo( std::ostream &out=BASSO_STDOUT  ) const;
 		
 		/**\return teh number of nodes (points) in the class*/
 		BASSO_IDTYPE NumPoints( ) const { return coords.NumPoints(); }
@@ -364,9 +392,16 @@ class Basso_VTKPoints
 
 void Basso_VTKPoints::Print( std::ostream &out  ) const
 {
+	if ( NumPoints() == 0 ) return;
+	
 	out << "<Points>\n" 
 		<< coords 
 	    << "</Points>\n";
+}
+void Basso_VTKPoints::PrintInfo( std::ostream &out  ) const
+{
+	if ( NumPoints() == 0 ) return;
+	coords.PrintInfo(out);
 }
 
 std::ostream &operator << ( std::ostream &out, const Basso_VTKPoints &A )
@@ -411,6 +446,7 @@ class Basso_VTKCells
 		 *  \param out - the output stream to write the array to.		 
 		 */
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
+		virtual void PrintInfo( std::ostream &out=BASSO_STDOUT  ) const;
 		
 		/**
 		 *  \return The number of cells/elements in the class.
@@ -452,10 +488,20 @@ void Basso_VTKCells::SetElementData( const Basso_ParentElement *etype )
 
 void Basso_VTKCells::Print( std::ostream &out  ) const
 {
+	if ( NumCells()==0 ) return;
 	out << "<Cells>\n" 
 		<< connectivity << offsets << types 
 	    << "</Cells>\n";
-}		
+}	
+
+void Basso_VTKCells::PrintInfo( std::ostream &out ) const
+{
+	if ( NumCells()==0 ) return;
+	
+	connectivity.PrintInfo(out);
+	offsets.PrintInfo(out);
+	types.PrintInfo(out);
+}			
 
 unsigned int Basso_VTKCells::ElementTypeID( const Basso_ElementType &et ) const
 {
@@ -521,6 +567,7 @@ class Basso_VTKPointData
 		 *  \param out - the output stream to write the array to.		 
 		 */
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
+		virtual void PrintInfo( std::ostream &out=BASSO_STDOUT  ) const;
 		/**
 		 *  \return The number of data arrays in the the class.
 		 */
@@ -569,13 +616,24 @@ string Basso_VTKPointData::NamesString( ) const
 	return dnames;
 }
 		
-void Basso_VTKPointData::Print( std::ostream &out  ) const
+void Basso_VTKPointData::Print( std::ostream &out ) const
 {
+	if ( NumDataArrays() == 0 ) return;
+	
 	out << "<"+MyNameIs() << NamesString() << ">\n"; 
 	for ( list<const Basso_VTKDataArray*>::const_iterator itr=datalist.begin();
 				itr!=datalist.end(); ++itr )
 		(*itr)->Print(out);		
 	out << "</"+MyNameIs()+">\n";
+}			
+	
+void Basso_VTKPointData::PrintInfo( std::ostream &out ) const
+{
+	if ( NumDataArrays() == 0 ) return;
+	
+	for ( list<const Basso_VTKDataArray*>::const_iterator itr=datalist.begin();
+				itr!=datalist.end(); ++itr )
+		(*itr)->PrintInfo(out);		
 }		
 
 std::ostream &operator << ( std::ostream &out, const Basso_VTKPointData &A )
@@ -614,18 +672,28 @@ class Basso_VTKFile
 {
 	public:
 		Basso_VTKFile ( const string &jobname ) : job(jobname) { }
+		Basso_VTKFile ( const string &jobname, int id ) : job(jobname) { AddIDTag(id); }
 	
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const=0;
 		
 		virtual void AddPointData( const Basso_VTKDataArray *data ) 
 				{ pointdata.AddDataArray(data); } 
+				
 		virtual void AddCellData( const Basso_VTKDataArray *data ) 
 				{ celldata.AddDataArray(data); } 
+				
+		bool CellDataEmpty( ) const 
+			{ return ( celldata.NumDataArrays( )==0 ? true : false ); }
+			
+		bool PointDataEmpty( ) const 
+			{ return ( pointdata.NumDataArrays( )==0 ? true : false ); }
+	
+		string IDTag( int id, int w=4 ) const;
+		void AddIDTag( int id, int w=4 ) { job += IDTag(id,w); }
 	
 		virtual void WriteFile( ) const;
 		virtual string FileName( ) const { return job+FileExtension(); }
 		
-	protected:
 		virtual string FileExtension( ) const = 0;
 		virtual void PrintData( std::ostream &out=BASSO_STDOUT ) const;
 		
@@ -635,6 +703,15 @@ class Basso_VTKFile
 		
 		string job;
 };
+
+string Basso_VTKFile::IDTag( int id, int w ) const
+{
+	ostringstream ss;
+	ss.fill('0');
+	ss << "_" << setw(w) << id;
+	return ss.str();
+	//job += ss.str();
+}
 
 void Basso_VTKFile::PrintData( std::ostream &out ) const
 {
@@ -665,6 +742,7 @@ class Basso_VTKUnstructuredGrid : public Basso_VTKFile
 {
 	public:
 		Basso_VTKUnstructuredGrid( const string &jobname="results" ) : Basso_VTKFile(jobname) { }
+		Basso_VTKUnstructuredGrid( const string &jobname, int id ) : Basso_VTKFile(jobname,id) { }
 		
 		void SetMesh( const Basso_nMatrix &nodes, const Basso_Array2D<BASSO_IDTYPE> &conn,
 					const Basso_ParentElement *etype )
@@ -675,7 +753,6 @@ class Basso_VTKUnstructuredGrid : public Basso_VTKFile
 	
 		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
 	
-	protected:
 		virtual string FileExtension( ) const { return ".vtu"; }
 	
 	protected:
@@ -700,79 +777,6 @@ void Basso_VTKUnstructuredGrid::Print( std::ostream &out ) const
 }
 
 std::ostream &operator << ( std::ostream &out, const Basso_VTKUnstructuredGrid &A )
-{
-	A.Print( out );
-	return out;
-}
-
-/**
- *  \brief Serial VTK XML based output for unstrictured grids
- */
-class Basso_VTKPUnstructuredGrid 
-{
-	public:
-	/**
-	 *  constructor
-	 *  \param jobname The name of the resulting .vtu file  (jobname.vtu)
-	 */
-		Basso_VTKPUnstructuredGrid(const string &jobname="results" ) : job(jobname) { }
-	/**
-	 *  Prints the vtk file to the ostream
-	 *  \param out the output stream to print to	 
-	 */
-		virtual void Print( std::ostream &out=BASSO_STDOUT  ) const;
-	/**
-	 *  Writes the full VTK file 
-	 */
-		virtual void WriteFile( ) const;
-	/**
-	 *  Returns the filename with the extension	
-	 */
-		virtual string FileName( ) const { return job+FileExtension(); }
-		
-	protected:
-	/**
-	 *  the extension of the file
-	 */
-		virtual string FileExtension( ) const { return ".pvtu"; }
-		
-	protected:
-		list < Basso_VTKUnstructuredGrid > grids;
-		string job;
-};
-
-void Basso_VTKPUnstructuredGrid::WriteFile( ) const 
-{
-    ofstream outfile;
-	outfile.open( FileName().c_str(), ios::out );
-    if ( !outfile )
-	{
-		Basso_Warning("Basso_VTKPUnstructuredGrid::WriteFile","cannot open file");
-        return;
-	}
-	
-	outfile << "<?xml version=\"1.0\"?>\n";
-	Print(outfile);
-	outfile.close();
-}
-
-void Basso_VTKPUnstructuredGrid::Print( std::ostream &out ) const
-{
-	out << "<VTKFile type=\"PUnstructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\" >\n"
-		<< "<PUnstructuredGrid GhostLevel=\"0\">\n" ;
-		
-	/* 	<PPointData>
-		</PPointData> 
-		<PCellData>
-		</PCellData> 
-		<PPoints>
-		</PPoints> 
-		<Piece Source=”unstructuredGrid0.vtu”/>  */
-		
-	out << "</PUnstructuredGrid>\n</VTKFile>";
-}
-
-std::ostream &operator << ( std::ostream &out, const Basso_VTKPUnstructuredGrid &A )
 {
 	A.Print( out );
 	return out;

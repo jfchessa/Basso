@@ -49,7 +49,7 @@ public:
 	*/
 	TBasso_DOFMap( const Basso_Array<BASSO_IDTYPE> &gnids, int nldof=6 ) 
 				: gdof_map_(nldof,gnids.Length())
-		{ fixed_=false; SetGNIDs(gnids); owned_gdof_map_=NULL; }
+		{ fixed_=false; SetGNIDs(gnids); owned_gdof_map_=NULL; shared_gdof_map_=NULL; }
 
 	
 	/**
@@ -61,10 +61,14 @@ public:
 	*/	
 	TBasso_DOFMap( const Epetra_Comm &Comm, const Basso_Array<BASSO_IDTYPE> &gnids, int nldof=6 ) 
 				: gdof_map_(nldof,gnids.Length())
-		{ fixed_=false; SetGNIDs(gnids); owned_gdof_map_=NULL; FixDOFMap(Comm); }
+		{ fixed_=false; SetGNIDs(gnids); owned_gdof_map_=NULL; shared_gdof_map_=NULL; FixDOFMap(Comm); }
 		
 	/** Deconstructor */
-	~TBasso_DOFMap() { if ( owned_gdof_map_!=NULL ) delete owned_gdof_map_; }
+	~TBasso_DOFMap() 
+	{ 
+		if ( owned_gdof_map_!=NULL ) delete owned_gdof_map_;
+		if ( shared_gdof_map_!=NULL ) delete shared_gdof_map_;
+	}
 		
 	/** Sets the global node ids that are supported by the procesor.
 	\param gnids - an array of the global node ids that are supported by the processor.  This array needs to 
@@ -74,7 +78,7 @@ public:
 	
 	/**
 	Initialized the global dof map.  This takes the global node ids supported on each processor
-	and determines a unique global id 
+	and determines a unique global id.  This initializes the shared and owned dof maps. 
 	\param Comm - The mpi commuication operator
 	*/
 	void FixDOFMap( const Epetra_Comm &Comm );
@@ -127,6 +131,11 @@ public:
 	*/
 	const Epetra_Map &OwnedGDOFMap() const { return *owned_gdof_map_; }
 	
+	/** Returns a pointer to an overlapping shared gdof map that can be used to construct operators with local support.
+	\return a constant pointer to the gdof map
+	*/
+	const Epetra_Map &SharedGDOFMap() const { return *shared_gdof_map_; }
+	
 	/**Sets the dofs in the map 
 	\param ldofs on return has the local dofs active in the map
 	*/
@@ -164,6 +173,7 @@ protected:
 	Basso_Array<BASSO_IDTYPE> gnids_;
 	bool fixed_;
 	Epetra_Map *owned_gdof_map_;
+	Epetra_Map *shared_gdof_map_;
 };
 
 void TBasso_DOFMap::LDOFs( Basso_Array<int> & ldofs ) const
@@ -278,6 +288,8 @@ void TBasso_DOFMap::FixDOFMap( const Epetra_Comm &Comm )
 		Comm.Broadcast( &gdof, 1, pid );
 	}
 	
+	if ( owned_gdof_map_ != NULL )
+		delete owned_gdof_map_;
 	owned_gdof_map_ = new Epetra_Map(-1,numMyGDOFs,myGDOFs.Values(),0,Comm);
 	
 	/* ============ Compute the GDOF for the shared nids ============= */ 
@@ -294,7 +306,11 @@ void TBasso_DOFMap::FixDOFMap( const Epetra_Comm &Comm )
 	for  ( int i=0; i<numSharedNodes; ++i )
 		for ( int s=0; s<NumDofPerNode(); ++s )
 			gdof_map_[i][s] = startSharedGDOF[i]+s;
-		
+	
+	if ( shared_gdof_map_ != NULL )
+		delete shared_gdof_map_;
+	shared_gdof_map_ = new Epetra_Map(-1,gdof_map_.Length(),gdof_map_.Data(),0,Comm);
+	
 	// done! so set as fixed
 	fixed_ = true;
 

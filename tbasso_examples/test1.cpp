@@ -29,13 +29,13 @@
 #include "Basso_PointBCSet.h"
 #include "Basso_FaceBCSet.h"
 
-#include "Basso_VTK.h"
 
 // tbasso includes
 #include "TBasso_DOFMap.h"
 #include "TBasso_FECrsMatrix.h"
 #include "TBasso_FEVector.h"
 #include "TBasso_FESolver.h"
+#include "TBasso_PVTK.h"
 
 using namespace std;
 using namespace Basso;
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 	// Define the finite element mesh
 	Basso_Point p0( 0.0, 0.0, 0.0 ), p1( 10.0, 5.0, 2.5 );
 	Basso_PMeshBlockHexa8<Basso_Numeric> mesh(p0,p1,comm.MyPID());
-	mesh.SetElementSize(5.0);
+	mesh.SetElementSize(0.1);
 	mesh.SetNumPartitions(2,1,1);
 	
 	if ( comm.NumProc() != mesh.NumPartitions() )
@@ -126,23 +126,16 @@ int main(int argc, char* argv[])
 	TBasso_FEVector disp(GDOFMap); 
 	TBasso_FESolver solver(Kmat,disp,rhs,GDOFMap,spcs);
 	
-	//cout << "Before " << Kmat << "\n";
-	
-	//cout << "After " << Kmat << "\n";
 	solver.Solve();
 	
-	//cout << "fext " << rhs << "\n";
-	cout << "PID= " << comm.MyPID() << " spcs " << spcs << "\n";
-	cout << "GDOF " << GDOFMap << "\n";
-	cout << "disp " << disp << "\n";
+	TBasso_LocalVector dlocal( GDOFMap );
+	dlocal.PullValues(disp);
 	
-	// write the mesh
-	ostringstream ss;
-	ss << comm.MyPID();
-	string filename = "test1_"+ss.str();
-	
-	Basso_VTKUnstructuredGrid results(filename);
+	// write the results
+	TBasso_VTKPUnstructuredGrid results(comm,"test1");
 	results.SetMesh(nodes,conn,&hexa8);
+	Basso_VTKFloatDataArray ddata( "displacement", dlocal.Data(), nn, 3 );
+	results.AddPointData(&ddata);
 	results.WriteFile();
 	
 #ifdef HAVE_MPI
