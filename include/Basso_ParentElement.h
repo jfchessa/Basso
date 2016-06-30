@@ -444,7 +444,7 @@ class Basso_ParentElement
 
 		virtual void Print( ostream &out ) const 
 		{
-			out << "Basso_ParentElement " << this->Type();
+			out << this->Type();
 		}
 
 		/** 
